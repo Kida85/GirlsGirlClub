@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Feierabend-Rechner | Ninas kleine Toolbox</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+
+  <style>
+    :root {
+      --wine: #662849;
+      --plum: #86365f;
+      --rose: #d96c9d;
+      --soft-rose: #f9e5ee;
+      --cream: #fffaf8;
+      --gold: #c99647;
+      --text: #3e2632;
+      --muted: #896b79;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 15%, rgba(255,255,255,.8) 0 3px, transparent 4px),
+        radial-gradient(circle at 85% 14%, rgba(255,255,255,.7) 0 4px, transparent 5px),
+        linear-gradient(135deg, #f9e5ee, #fdf5f3 52%, #f1e5ee);
+    }
+
+    .page-wrapper {
+      width: min(920px, 92%);
+      margin: 0 auto;
+    }
+
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 25px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--wine);
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(134, 54, 95, .25);
+      border-radius: 50%;
+      background: rgba(255,255,255,.65);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    nav a {
+      padding: 9px 13px;
+      border-radius: 20px;
+      color: var(--plum);
+      font-size: .9rem;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: white;
+      background: var(--plum);
+    }
+
+    .tool-card {
+      max-width: 600px;
+      margin: 30px auto 55px;
+      padding: clamp(25px, 5vw, 45px);
+      border: 1px solid rgba(134, 54, 95, .12);
+      border-radius: 28px;
+      background: rgba(255,255,255,.86);
+      box-shadow: 0 18px 40px rgba(89, 39, 64, .12);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      color: var(--plum);
+      font-size: .78rem;
+      font-weight: bold;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      background: var(--soft-rose);
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--wine);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.2rem, 7vw, 3.6rem);
+      font-weight: normal;
+    }
+
+    .intro {
+      margin: 13px 0 30px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .section-title {
+      display: block;
+      margin: 24px 0 10px;
+      color: var(--plum);
+      font-size: .93rem;
+      font-weight: bold;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--wine);
+      font-size: .86rem;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 2px solid #eed1df;
+      border-radius: 12px;
+      color: var(--text);
+      font: inherit;
+      font-weight: bold;
+      text-align: center;
+      background: #fffafb;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--rose);
+      box-shadow: 0 0 0 4px rgba(217,108,157,.13);
+    }
+
+    .hint {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: .75rem;
+      text-align: center;
+    }
+
+    .pause-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .pause-row {
+      display: grid;
+      grid-template-columns: 1fr 50px;
+      gap: 10px;
+    }
+
+    button {
+      border: 0;
+      font: inherit;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .small-button {
+      width: 50px;
+      padding: 0;
+      border-radius: 12px;
+      color: white;
+      font-size: 1.4rem;
+      background: var(--plum);
+    }
+
+    .remove-button {
+      background: #c74e70;
+    }
+
+    .calculate-button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 13px;
+      color: white;
+      background: linear-gradient(135deg, var(--plum), var(--wine));
+      box-shadow: 0 5px 0 #4f1e38;
+    }
+
+    .calculate-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .error {
+      min-height: 22px;
+      margin-top: 14px;
+      color: #c03255;
+      font-size: .9rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .result {
+      display: none;
+      margin-top: 23px;
+      padding: 22px;
+      border: 1px solid #edd6a9;
+      border-radius: 18px;
+      text-align: center;
+      background: linear-gradient(135deg, #fff9ec, #fffdf9);
+    }
+
+    .result.visible {
+      display: block;
+    }
+
+    .result p {
+      margin: 0 0 8px;
+      color: var(--plum);
+      font-weight: bold;
+    }
+
+    .end-time {
+      color: var(--wine);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3rem, 12vw, 4.6rem);
+    }
+
+    .small-result {
+      margin-top: 13px !important;
+      color: var(--muted) !important;
+      font-size: .83rem;
+      font-weight: normal !important;
+      line-height: 1.5;
+    }
+
+    .countdown-box {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 13px;
+      background: #f9e5ee;
+    }
+
+    .countdown-box span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--plum);
+      font-size: .82rem;
+      font-weight: bold;
+    }
+
+    #countdown {
+      color: var(--wine);
+      font-size: 1.7rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 600px) {
+      .site-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper">
+
+    <header class="site-header">
+      <a class="brand" href="../">
+        <span class="brand-icon">✦</span>
+        <span>Ninas kleine Toolbox</span>
+      </a>
+
+      <nav>
+        <a href="../">Home</a>
+        <a class="active" href="./">Feierabend</a>
+        <a href="../mini-spiele/">Mini-Spiele</a>
+      </nav>
+    </header>
+
+    <main class="tool-card">
+      <div class="eyebrow">🕒 Kleiner Alltagshelfer</div>
+
+      <h1>Feierabend-Rechner</h1>
+
+      <p class="intro">
+        Berechne deine Feierabendzeit, füge beliebig viele Pausen hinzu
+        und behalte den Countdown im Blick.
+      </p>
+
+      <span class="section-title">Arbeitsbeginn · 24-Stunden-Format</span>
+
+      <div class="input-row">
+        <div>
+          <label for="startStunden">Stunden</label>
+          <input id="startStunden" type="number" min="0" max="23" value="8">
+          <p class="hint">0 bis 23</p>
+        </div>
+
+        <div>
+          <label for="startMinuten">Minuten</label>
+          <input id="startMinuten" type="number" min="0" max="59" value="0">
+          <p class="hint">0 bis 59</p>
+        </div>
+      </div>
+
+      <span class="section-title">Arbeitszeit</span>
+
+      <div class="input-row">
+        <div>
+          <label for="arbeitsStunden">Stunden</label>
+          <input id="arbeitsStunden" type="number" min="0" max="24" value="8">
+        </div>
+
+        <div>
+          <label for="arbeitsMinuten">Minuten</label>
+          <input id="arbeitsMinuten" type="number" min="0" max="59" value="0">
+        </div>
+      </div>
+
+      <span class="section-title">Pausenzeit in Minuten</span>
+
+      <div class="pause-list" id="pausenListe">
+        <div class="pause-row">
+          <input class="pause-input" type="number" min="0" max="300" value="0">
+          <button class="small-button" id="pauseHinzufuegen" type="button" title="Pause hinzufügen">＋</button>
+        </div>
+      </div>
+
+      <button class="calculate-button" id="berechnenButton">
+        Feierabend berechnen ✦
+      </button>
+
+      <div class="error" id="fehler"></div>
+
+      <section class="result" id="ergebnis">
+        <p>Du könntest Feierabend machen um</p>
+        <div class="end-time" id="feierabendZeit">16:00</div>
+        <p>Uhr</p>
+
+        <p class="small-result" id="zusatzInfo"></p>
+
+        <div class="countdown-box">
+          <span id="countdownLabel">Noch bis zum Feierabend</span>
+          <div id="countdown">--:--:--</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const startStundenInput = document.getElementById("startStunden");
+    const startMinutenInput = document.getElementById("startMinuten");
+    const arbeitsStundenInput = document.getElementById("arbeitsStunden");
+    const arbeitsMinutenInput = document.getElementById("arbeitsMinuten");
+
+    const pausenListe = document.getElementById("pausenListe");
+    const pauseHinzufuegen = document.getElementById("pauseHinzufuegen");
+
+    const berechnenButton = document.getElementById("berechnenButton");
+    const ergebnis = document.getElementById("ergebnis");
+    const feierabendZeit = document.getElementById("feierabendZeit");
+    const zusatzInfo = document.getElementById("zusatzInfo");
+    const fehler = document.getElementById("fehler");
+    const countdown = document.getElementById("countdown");
+    const countdownLabel = document.getElementById("countdownLabel");
+
+    let countdownTimer;
+    let feierabendDatum;
+
+    function zweiStellen(zahl) {
+      return String(zahl).padStart(2, "0");
+    }
+
+    function neuePause() {
+      const zeile = document.createElement("div");
+      zeile.className = "pause-row";
+
+      zeile.innerHTML = `
+        <input class="pause-input" type="number" min="0" max="300" value="0">
+        <button class="small-button remove-button" type="button" title="Pause entfernen">×</button>
+      `;
+
+      pausenListe.appendChild(zeile);
+      zeile.querySelector("input").focus();
+    }
+
+    pauseHinzufuegen.addEventListener("click", neuePause);
+
+    pausenListe.addEventListener("click", event => {
+      if (event.target.classList.contains("remove-button")) {
+        event.target.closest(".pause-row").remove();
+      }
+    });
+
+    function dauerFormatieren(milliseconds) {
+      const sekundenGesamt = Math.floor(milliseconds / 1000);
+      const stunden = Math.floor(sekundenGesamt / 3600);
+      const minuten = Math.floor((sekundenGesamt % 3600) / 60);
+      const sekunden = sekundenGesamt % 60;
+
+      return `${zweiStellen(stunden)}:${zweiStellen(minuten)}:${zweiStellen(sekunden)}`;
+    }
+
+    function countdownAktualisieren() {
+      const differenz = feierabendDatum - new Date();
+
+      if (differenz <= 0) {
+        clearInterval(countdownTimer);
+        countdownLabel.textContent = "Der errechnete Feierabend ist bereits vorbei";
+        countdown.textContent = "✦ YAY! ✦";
+        return;
+      }
+
+      countdownLabel.textContent = "Noch bis zum Feierabend";
+      countdown.textContent = dauerFormatieren(differenz);
+    }
+
+    function feierabendBerechnen() {
+      const startStunden = Number(startStundenInput.value);
+      const startMinuten = Number(startMinutenInput.value);
+      const arbeitsStunden = Number(arbeitsStundenInput.value);
+      const arbeitsMinuten = Number(arbeitsMinutenInput.value);
+
+      const pauseInputs = [...document.querySelectorAll(".pause-input")];
+      const pauseGesamt = pauseInputs.reduce((summe, input) => {
+        return summe + Number(input.value);
+      }, 0);
+
+      const istUngueltig =
+        startStundenInput.value === "" ||
+        startMinutenInput.value === "" ||
+        arbeitsStundenInput.value === "" ||
+        arbeitsMinutenInput.value === "" ||
+        startStunden < 0 || startStunden > 23 ||
+        startMinuten < 0 || startMinuten > 59 ||
+        arbeitsStunden < 0 || arbeitsStunden > 24 ||
+        arbeitsMinuten < 0 || arbeitsMinuten > 59 ||
+        pauseInputs.some(input => input.value === "" || Number(input.value) < 0);
+
+      clearInterval(countdownTimer);
+      fehler.textContent = "";
+
+      if (istUngueltig) {
+        ergebnis.classList.remove("visible");
+        fehler.textContent = "Bitte gib gültige Uhrzeiten und Pausen ein.";
+        return;
+      }
+
+      const startInMinuten = startStunden * 60 + startMinuten;
+      const arbeitszeitInMinuten = arbeitsStunden * 60 + arbeitsMinuten;
+      const feierabendInMinuten = startInMinuten + arbeitszeitInMinuten + pauseGesamt;
+
+      const naechsterTag = feierabendInMinuten >= 1440;
+      const endzeitHeute = feierabendInMinuten % 1440;
+      const endStunden = Math.floor(endzeitHeute / 60);
+      const endMinuten = endzeitHeute % 60;
+
+      feierabendZeit.textContent = `${zweiStellen(endStunden)}:${zweiStellen(endMinuten)}`;
+
+      const heute = new Date();
+
+      feierabendDatum = new Date(
+        heute.getFullYear(),
+        heute.getMonth(),
+        heute.getDate(),
+        endStunden,
+        endMinuten,
+        0
+      );
+
+      if (naechsterTag) {
+        feierabendDatum.setDate(feierabendDatum.getDate() + 1);
+      }
+
+      let info =
+        `Start: ${zweiStellen(startStunden)}:${zweiStellen(startMinuten)} Uhr · ` +
+        `Arbeitszeit: ${arbeitsStunden} Std. ${arbeitsMinuten} Min.`;
+
+      if (pauseGesamt > 0) {
+        info += ` · Pausen gesamt: ${pauseGesamt} Min.`;
+      }
+
+      if (naechsterTag) {
+        info += " · Feierabend am nächsten Tag";
+      }
+
+      zusatzInfo.textContent = info;
+      ergebnis.classList.add("visible");
+
+      countdownAktualisieren();
+
+      countdownTimer = setInterval(() => {
+        countdownAktualisieren();
+      }, 1000);
+    }
+
+    berechnenButton.addEventListener("click", feierabendBerechnen);
+
+    document.addEventListener("keydown", event => {
+      if (event.target.matches("input") && event.key === "Enter") {
+        feierabendBerechnen();
+      }
+    });
+
+    feierabendBerechnen();
+  </script>
+</body>
+</html>
