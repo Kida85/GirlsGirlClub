@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mini-Spielhalle | Ninas kleine Toolbox</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+
+  <style>
+    :root {
+      --wine: #662849;
+      --plum: #86365f;
+      --rose: #d96c9d;
+      --soft-rose: #f9e5ee;
+      --cream: #fffaf8;
+      --gold: #c99647;
+      --text: #3e2632;
+      --muted: #896b79;
+      --green: #1c9a70;
+      --red: #d14d63;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 15%, rgba(255,255,255,.8) 0 3px, transparent 4px),
+        radial-gradient(circle at 85% 14%, rgba(255,255,255,.7) 0 4px, transparent 5px),
+        radial-gradient(circle at 72% 80%, rgba(255,255,255,.65) 0 3px, transparent 4px),
+        linear-gradient(135deg, #f9e5ee, #fdf5f3 52%, #f1e5ee);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      background: var(--plum);
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    button:hover {
+      opacity: .92;
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .5;
+      transform: none;
+    }
+
+    .page-wrapper {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+
+    /* Navigation */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 25px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--wine);
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(134, 54, 95, .25);
+      border-radius: 50%;
+      background: rgba(255,255,255,.65);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    nav a {
+      padding: 9px 13px;
+      border-radius: 20px;
+      color: var(--plum);
+      font-size: .9rem;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: white;
+      background: var(--plum);
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(32px, 7vw, 65px);
+      border-radius: 28px;
+      color: white;
+      background: linear-gradient(125deg, #531c38, #86365f);
+      box-shadow: 0 18px 40px rgba(89,39,64,.16);
+    }
+
+    .hero::after {
+      content: "✦";
+      position: absolute;
+      right: 10%;
+      bottom: 17%;
+      color: rgba(255,255,255,.35);
+      font-size: 4rem;
+    }
+
+    .hero span {
+      display: inline-block;
+      margin-bottom: 13px;
+      padding: 7px 11px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: bold;
+      background: rgba(255,255,255,.1);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 7vw, 4.7rem);
+      font-weight: normal;
+    }
+
+    .hero p {
+      max-width: 600px;
+      margin: 15px 0 0;
+      color: rgba(255,255,255,.85);
+      line-height: 1.6;
+    }
+
+    /* Aufklappbare Spiele */
+    .games {
+      margin: 26px 0 50px;
+    }
+
+    details.game-card {
+      margin: 15px 0;
+      overflow: hidden;
+      border: 1px solid rgba(134,54,95,.14);
+      border-radius: 20px;
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 9px 20px rgba(89,39,64,.08);
+    }
+
+    details.game-card summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 19px 21px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    details.game-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .game-title {
+      display: grid;
+      gap: 4px;
+    }
+
+    .game-title strong {
+      color: var(--wine);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+      font-weight: normal;
+    }
+
+    .game-title small {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .toggle {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.45rem;
+      background: linear-gradient(135deg, var(--rose), var(--plum));
+    }
+
+    .toggle::before {
+      content: "＋";
+    }
+
+    details[open] .toggle::before {
+      content: "−";
+    }
+
+    .game-content {
+      padding: 5px 22px 28px;
+      border-top: 1px solid #f1dce6;
+    }
+
+    .game-content > p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px 25px;
+      margin: 15px 0;
+      color: var(--wine);
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .message {
+      min-height: 26px;
+      margin-top: 14px;
+      color: var(--plum);
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .main-button {
+      padding: 12px 18px;
+    }
+
+    .secondary-button {
+      padding: 11px 15px;
+      color: var(--wine);
+      background: var(--soft-rose);
+    }
+
+    /* Roter Punkt */
+    #punkt-spielfeld {
+      width: min(850px, 100%);
+      height: 360px;
+      position: relative;
+      overflow: hidden;
+      margin: 15px auto 0;
+      border: 3px solid #e8c4d5;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #fff4f8, #f2eaf7);
+    }
+
+    #roter-punkt {
+      width: 70px;
+      height: 70px;
+      display: none;
+      position: absolute;
+      border-radius: 50%;
+      background: #ef4760;
+      box-shadow: 0 5px 12px rgba(0,0,0,.2);
+    }
+
+    /* Reaktion */
+    #reaktions-feld {
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      border-radius: 18px;
+      color: white;
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      font-weight: bold;
+      text-align: center;
+      background: #7b7c93;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #reaktions-feld.bereit {
+      background: var(--green);
+    }
+
+    #reaktions-feld.zu-frueh {
+      background: var(--red);
+    }
+
+    /* Zahlen */
+    .guess-area {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .guess-area input {
+      width: 160px;
+      padding: 10px;
+      border: 2px solid #e8c4d5;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    /* Schere Stein Papier */
+    .rps-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .rps-choice {
+      min-width: 135px;
+      padding: 15px;
+      background: #c45c89;
+    }
+
+    /* Labyrinth */
+    #maze-wrap {
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+      padding: 8px;
+    }
+
+    #maze {
+      width: 420px;
+      height: 420px;
+      display: grid;
+      flex: 0 0 auto;
+      border: 4px solid #4b3542;
+      background: white;
+    }
+
+    .maze-cell {
+      border: 1px solid rgba(0,0,0,.03);
+    }
+
+    .maze-wall {
+      background: #4b3542;
+    }
+
+    .maze-start {
+      background: #4abd83;
+    }
+
+    .maze-goal {
+      background: #e7b443;
+    }
+
+    /* Maulwurf */
+    #maulwurf-grid {
+      width: min(500px, 100%);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 13px;
+      margin: 18px auto;
+    }
+
+    .loch {
+      aspect-ratio: 1;
+      position: relative;
+      overflow: hidden;
+      border-radius: 50%;
+      background: #754b35;
+      box-shadow: inset 0 10px 0 rgba(0,0,0,.18);
+    }
+
+    .maulwurf {
+      width: 72%;
+      height: 72%;
+      display: none;
+      position: absolute;
+      bottom: -5%;
+      left: 14%;
+      padding: 0;
+      border: 3px solid #8d634a;
+      border-radius: 50% 50% 43% 43%;
+      font-size: clamp(2rem, 8vw, 4rem);
+      background: #d6a278;
+    }
+
+    .maulwurf.aktiv {
+      display: block;
+    }
+
+    /* Doodle Jump */
+    .canvas-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 13px;
+    }
+
+    canvas {
+      max-width: 100%;
+      border: 4px solid #d9a9c0;
+      border-radius: 16px;
+      background: #dbeafe;
+    }
+
+    .game-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 13px;
+    }
+
+    .control-button {
+      min-width: 90px;
+      padding: 10px 14px;
+      font-size: 1.25rem;
+      background: #a74774;
+    }
+
+    /* Emoji */
+    #emoji-spielfeld {
+      width: min(500px, 100%);
+      height: 400px;
+      position: relative;
+      overflow: hidden;
+      margin: 15px auto;
+      border: 3px solid #9bcabe;
+      border-radius: 16px;
+      background: linear-gradient(#c8f0f6, #f9fafb);
+      touch-action: none;
+    }
+
+    .fallendes-emoji {
+      position: absolute;
+      font-size: 2.1rem;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    #korb {
+      width: 86px;
+      height: 48px;
+      display: flex;
+      position: absolute;
+      bottom: 12px;
+      left: calc(50% - 43px);
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px 10px 18px 18px;
+      font-size: 2.2rem;
+      background: #a8643e;
+      user-select: none;
+    }
+
+    /* Farben */
+    #farben-wort {
+      min-height: 80px;
+      margin: 18px 0;
+      font-size: clamp(2.8rem, 10vw, 5.5rem);
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 3px;
+    }
+
+    #farben-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .color-choice {
+      min-width: 100px;
+      padding: 11px;
+    }
+
+    /* Bingo */
+    #bingo-grid {
+      width: min(600px, 100%);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin: 15px auto;
+    }
+
+    .bingo-cell {
+      min-height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px;
+      border: 2px solid #efd1df;
+      border-radius: 9px;
+      color: #62354d;
+      font-size: clamp(.61rem, 1.9vw, .84rem);
+      font-weight: bold;
+      text-align: center;
+      background: #fff8fb;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .bingo-cell.selected {
+      border-color: #2d9a71;
+      color: white;
+      background: #49ae86;
+    }
+
+    .bingo-cell.free {
+      color: #553c16;
+      background: #edc664;
+    }
+
+    footer {
+      padding: 18px 0 30px;
+      color: var(--muted);
+      font-size: .85rem;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .site-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .game-content {
+        padding: 5px 12px 20px;
+      }
+
+      .game-title small {
+        display: none;
+      }
+
+      #punkt-spielfeld {
+        height: 300px;
+      }
+
+      #maze {
+        width: 330px;
+        height: 330px;
+      }
+
+      .bingo-cell {
+        min-height: 62px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper">
+
+    <header class="site-header">
+      <a class="brand" href="../">
+        <span class="brand-icon">✦</span>
+        <span>Ninas kleine Toolbox</span>
+      </a>
+
+      <nav>
+        <a href="../">Home</a>
+        <a href="../feierabend-rechner/">Feierabend</a>
+        <a class="active" href="./">Mini-Spiele</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <span>✦ Kleine Pause gefällig?</span>
+        <h1>Mini-Spielhalle</h1>
+        <p>
+          Kleine Spiele für zwischendurch. Klicke auf eine Karte,
+          öffne dein Spiel und leg einfach los.
+        </p>
+      </section>
+
+      <section class="games">
+
+        <!-- 1. Roter Punkt -->
+        <details class="game-card">
+          <summary>
+            <div class="game-title">
+              <strong>🎯 Klick den roten Punkt</strong>
+              <small>Treffe den Punkt so oft wie möglich in 20 Sekunden.</small>
+            </div>
+            <span class="toggle"></span>
+          </summary>
+
+          <div class="game-content">
+            <p>Der Punkt wird mit der Zeit kleiner – also schnell sein.</p>
+
+            <div class="stats">
+              <span>Punkte: <span id="punkt-punkte">0</span></span>
+              <span>Zeit: <span id="punkt-zeit">20</span> Sek.</span>
+            </div>
+
+            <div class="center">
+              <button class="main-button" id="punkt-start">Spiel starten</button>
+            </div>
+
+            <div id="punkt-spielfeld">
+              <button id="roter-punkt" aria-label="Roter Punkt"></button>
+            </div>
+
+            <div class="message" id="punkt-nachricht"></div>
+          </div>
+        </details>
+
+        <!-- 2. Reaktion -->
+        <details class="game-card">
+          <summary>
+            <div class="game-title">
+              <strong>⚡ Reaktions-Test</strong>
+              <small>Warte auf Grün und klicke so schnell wie möglich.</small>
+            </div>
+            <span class="toggle"></span>
+          </summary>
+
+          <div class="game-content">
+            <p>Klicke erst auf das Feld, wenn es grün geworden ist.</p>
+
+            <div class="center">
+              <button class="main-button" id="reaktion-start">Reaktionstest starten</button>
+            </div>
+
+            <div id="reaktions-feld">Klicke auf „Reaktionstest starten“</div>
+            <div class="message" id="reaktion-nachricht"></div>
+          </div>
+        </details>
+
+        <!-- 3. Zahlen -->
+        <details class="game-card">
+          <summary>
+            <div class="game-title">
+              <strong>🔢 Zahlen-Raten</strong>
+              <small>Finde die geheime Zahl zwischen 1 und 100.</small>
+            </div>
+            <span class="toggle"></span>
+          </summary>
+
+          <div class="game-content">
+            <p>Der Browser denkt sich eine Zahl aus und gibt dir Hinweise.</p>
+
+            <div class="guess-area">
+              <input id="zahlen-eingabe" type="number" min="1" max="100" placeholder="Zahl von 1–100">
+              <button id="zahlen-raten">Raten</button>
+              <button class="secondary-button" id="zahlen-neu">Neue Zahl</button>
+            </div>
+
+            <div class="message" id="zahlen-nachricht"></div>
+
+            <div class="stats">
+              <span>Versuche: <span id="zahlen-versuche">0</span></span>
+            </div>
+          </div>
+        </details>
+
+        <!-- 4. RPS -->
+        <details class="game-card">
+          <summary>
+            <div class="game-title">
+              <strong>✂️ Schere, Stein, Papier</strong>
+              <small>Spiel gegen eine sehr zufällige Computer-Gegnerin.</small>
+            </div>
+            <span class="toggle"></span>
+          </summary>
+
+          <div class="game-content">
+            <p>Wähle deine Hand – der Computer entscheidet gleichzeitig.</p>
+
+            <div class="rps-buttons">
+              <button class="rps-choice" data-choice="Schere">✂️ Schere</button>
+              <button class="rps-choice" data-choice="Stein">✊ Stein</button>
+              <button class="rps-choice" data-choice="Papier">✋ Papier</button>
+            </div>
+
+            <div class="message" id="rps-nachricht">Wähle eine Option!</div>
+
+            <div class="stats">
+              <span>Du: <span id="rps-du">0</span></span>
+              <span>Computer: <span id="rps-computer">0</span></span>
+              <span>Unentschieden: <span id="rps-unentschieden">0</span></span>
+            </div>
+          </div>
+        </details>
+
+        <!-- 5. Labyrinth -->
+        <details class="game-card">
+          <summary>
+            <div class="game-title">
+              <strong>🧀 Maus-Labyrinth</strong>
+              <small>Finde den Weg vom grünen Startfeld zum gelben Ziel.</small>
+            </div>
+            <span class="toggle"></span>
+          </summary>
+
+          <div class="game-content">
+            <p>Berührst du eine dunkle Wand, musst du zurück zum grünen Startfeld.</p>
+
+            <div id="maze-wrap">
+              <div id="maze"></div>
+            </div>
+
+            <div class="message" id="maze-nachricht"></div>
+
+            <div class="center">
+              <button class="secondary-button" id="maze-reset">
+                Neues zufälliges Labyrinth
+              </button>
+            </div>
+          </div>
+        </details>
+
+        <!-- 6. Maulwurf -->
+        <details class="game-card">
+          <summary>
+            <div class="game-title">
+              <strong>🔨 Fang den Maulwurf</strong>
+              <small>Treffe die kleinen Fellnasen, bevor sie wieder verschwinden.</small>
+            </div>
+            <span class="toggle"></span>
+          </summary>
+
+          <div class="game-content">
+            <p>Du hast 20 Sekunden Zeit, um möglichst viele Maulwürfe zu erwischen.</p>
+
+            <div class="stats">
+              <span>Punkte: <span id="maulwurf-punkte">0</span></span>
+              <span>Zeit: <span id="maulwurf-zeit">20</span> Sek.</span>
+            </div>
+
+            <div class="center">
+              <button class="main-button" id="maulwurf-start">Spiel starten</button>
+            </div>
+
+            <div id="maulwurf-grid">
+              <div class="loch"><button class="maulwurf">🐹</button></div>
+              <div class="loch"><button class="maulwurf">🐹</button></div>
+              <div class="loch"><button class="maulwurf">🐹</button></div>
+              <div class="loch"><button class="maulwurf">🐹</button></div>
+              <div class="loch"><button class="maulwurf">🐹</button></div>
+              <div class="loch"><button class="maulwurf">🐹</button></div>
+              <div class="loch"><button class="maulwurf">🐹</button></div>
+              <div class="loch"><button class="maulwurf">🐹</button></div>
+              <div class="loch"><button class="maulwurf">🐹</button></div>
+            </div>
+
+            <div class="message" id="maulwurf-nachricht"></div>
+          </div>
+        </details>
+
+        <!-- 7. Doodle -->
+        <details class="game-card">
+          <summary>
+            <div class="game-title">
+              <strong>🟢 Doodle Jump light</strong>
+              <small>Springe immer höher und lande auf den Plattformen.</small>
+            </div>
+            <span class="toggle"></span>
+          </summary>
+
+          <div class="game-content">
+            <p>
+              Nutze die Pfeiltasten oder die Buttons. Orange Plattformen können
+              einen Seitenwechsel erforderlich machen.
+            </p>
+
+            <div class="stats">
+              <span>Höhe: <span id="doodle-punkte">0</span></span>
+            </div>
+
+            <div class="center">
+              <button class="main-button" id="doodle-start">Spiel starten</button>
+            </div>
+
+            <div class="canvas-wrap">
+              <canvas id="doodle-canvas" width="420" height="540"></canvas>
+            </div>
+
+            <div class="game-controls">
+              <button class="control-button" id="doodle-links">←</button>
+              <button class="control-button" id="doodle-rechts">→</button>
+            </div>
+
+            <div class="message" id="doodle-nachricht"></div>
+          </div>
+        </details>
+
+        <!-- 8. Emoji -->
+        <details class="game-card">
+          <summary>
+            <div class="game-title">
+              <strong>🧺 Emoji-Fänger</strong>
+              <small>Fange fallende Emojis mit deinem Korb ein.</small>
+            </div>
+            <span class="toggle"></span>
+          </summary>
+
+          <div class="game-content">
+            <p>Steuere den Korb mit Maus, Finger oder den Pfeilbuttons.</p>
+
+            <div class="stats">
+              <span>Gefangen: <span id="emoji-punkte">0</span></span>
+              <span>Zeit: <span id="emoji-zeit">25</span> Sek.</span>
+            </div>
+
+            <div class="center">
+              <button class="main-button" id="emoji-start">Emoji-Fänger starten</button>
+            </div>
+
+            <div id="emoji-spielfeld">
+              <div id="korb">🧺</div>
+            </div>
+
+            <div class="game-controls">
+              <button class="control-button" id="emoji-links">←</button>
+              <button class="control-button" id="emoji-rechts">→</button>
+            </div>
+
+            <div class="message" id="emoji-nachricht"></div>
+          </div>
+        </details>
+
+        <!-- 9. Farben -->
+        <details class="game-card">
+          <summary>
+            <div class="game-title">
+              <strong>🌈 Farben-Chaos</strong>
+              <small>Klicke die Schriftfarbe – nicht das geschriebene Wort.</small>
+            </div>
+            <span class="toggle"></span>
+          </summary>
+
+          <div class="game-content">
+            <p>Die Farbe des Wortes ist entscheidend. Das Wort selbst versucht dich zu verwirren.</p>
+
+            <div class="stats">
+              <span>Punkte: <span id="farben-punkte">0</span></span>
+              <span>Runde: <span id="farben-runde">0</span> / 10</span>
+            </div>
+
+            <div class="center">
+              <button class="main-button" id="farben-start">Spiel starten</button>
+            </div>
+
+            <div id="farben-wort">BEREIT?</div>
+
+            <div id="farben-buttons">
+              <button class="color-choice" data-color="Rot" style="background:#e64b5d;">Rot</button>
+              <button class="color-choice" data-color="Blau" style="background:#3570c9;">Blau</button>
+              <button class="color-choice" data-color="Grün" style="background:#29986c;">Grün</button>
+              <button class="color-choice" data-color="Gelb" style="color:#5c420c; background:#edc553;">Gelb</button>
+            </div>
+
+            <div class="message" id="farben-nachricht"></div>
+          </div>
+        </details>
+
+        <!-- 10. Bingo -->
+        <details class="game-card">
+          <summary>
+            <div class="game-title">
+              <strong>☕ Mitarbeiter-Bingo</strong>
+              <small>Finde fünf passende Aussagen in einer Reihe.</small>
+            </div>
+            <span class="toggle"></span>
+          </summary>
+
+          <div class="game-content">
+            <p>Klicke Aussagen an, die heute schon passiert sind. Jede Karte wird neu gemischt.</p>
+
+            <div id="bingo-grid"></div>
+
+            <div class="center">
+              <button class="secondary-button" id="bingo-neu">
+                Neues Bingo-Feld
+              </button>
+            </div>
+
+            <div class="message" id="bingo-nachricht"></div>
+          </div>
+        </details>
+
+      </section>
+    </main>
+
+    <footer>
+      Mit ♥ gebaut – viel Spaß beim Spielen!
+    </footer>
+  </div>
+
+  <script>
+    /* =========================================================
+       1. KLICK DEN ROTEN PUNKT
+    ========================================================= */
+    const punktButton = document.getElementById("roter-punkt");
+    const punktFeld = document.getElementById("punkt-spielfeld");
+    const punktStart = document.getElementById("punkt-start");
+    const punktPunkte = document.getElementById("punkt-punkte");
+    const punktZeit = document.getElementById("punkt-zeit");
+    const punktNachricht = document.getElementById("punkt-nachricht");
+
+    let punktScore = 0;
+    let punktSekunden = 20;
+    let punktLaeuft = false;
+    let punktTimer;
+
+    function punktVerschieben() {
+      const groesse = punktButton.offsetWidth;
+      const maxX = punktFeld.clientWidth - groesse;
+      const maxY = punktFeld.clientHeight - groesse;
+
+      punktButton.style.left = Math.random() * maxX + "px";
+      punktButton.style.top = Math.random() * maxY + "px";
+    }
+
+    punktStart.addEventListener("click", () => {
+      clearInterval(punktTimer);
+
+      punktScore = 0;
+      punktSekunden = 20;
+      punktLaeuft = true;
+
+      punktPunkte.textContent = punktScore;
+      punktZeit.textContent = punktSekunden;
+      punktNachricht.textContent = "";
+
+      punktStart.disabled = true;
+      punktStart.textContent = "Spiel läuft ...";
+
+      punktButton.style.width = "70px";
+      punktButton.style.height = "70px";
+      punktButton.style.display = "block";
+
+      punktVerschieben();
+
+      punktTimer = setInterval(() => {
+        punktSekunden--;
+        punktZeit.textContent = punktSekunden;
+
+        if (punktSekunden <= 0) {
+          clearInterval(punktTimer);
+
+          punktLaeuft = false;
+          punktButton.style.display = "none";
+
+          punktStart.disabled = false;
+          punktStart.textContent = "Noch einmal spielen";
+
+          punktNachricht.textContent =
+            "Zeit vorbei! Du hast " + punktScore + " Punkte geschafft. 🎉";
+        }
+      }, 1000);
+    });
+
+    punktButton.addEventListener("click", () => {
+      if (!punktLaeuft) return;
+
+      punktScore++;
+      punktPunkte.textContent = punktScore;
+
+      const neueGroesse = Math.max(
+        22,
+        70 - Math.floor(punktScore / 4) * 6
+      );
+
+      punktButton.style.width = neueGroesse + "px";
+      punktButton.style.height = neueGroesse + "px";
+
+      punktVerschieben();
+    });
+
+    /* =========================================================
+       2. REAKTIONSTEST
+    ========================================================= */
+    const reaktionStart = document.getElementById("reaktion-start");
+    const reaktionsFeld = document.getElementById("reaktions-feld");
+    const reaktionNachricht = document.getElementById("reaktion-nachricht");
+
+    let reaktionStatus = "bereit";
+    let reaktionStartZeit;
+    let reaktionTimeout;
+
+    reaktionStart.addEventListener("click", () => {
+      clearTimeout(reaktionTimeout);
+
+      reaktionStatus = "warten";
+      reaktionStart.disabled = true;
+
+      reaktionNachricht.textContent = "";
+      reaktionsFeld.className = "";
+      reaktionsFeld.textContent = "Warte auf Grün ...";
+
+      const wartezeit = Math.random() * 3000 + 2000;
+
+      reaktionTimeout = setTimeout(() => {
+        reaktionStatus = "go";
+        reaktionStartZeit = Date.now();
+
+        reaktionsFeld.className = "bereit";
+        reaktionsFeld.textContent = "JETZT KLICKEN!";
+      }, wartezeit);
+    });
+
+    reaktionsFeld.addEventListener("click", () => {
+      if (reaktionStatus === "warten") {
+        clearTimeout(reaktionTimeout);
+
+        reaktionStatus = "bereit";
+        reaktionStart.disabled = false;
+
+        reaktionsFeld.className = "zu-frueh";
+        reaktionsFeld.textContent = "Zu früh! 😅";
+
+        reaktionNachricht.textContent =
+          "Du warst schneller als das grüne Licht.";
+      }
+
+      if (reaktionStatus === "go") {
+        const zeit = Date.now() - reaktionStartZeit;
+
+        reaktionStatus = "bereit";
+        reaktionStart.disabled = false;
+
+        reaktionsFeld.className = "";
+        reaktionsFeld.textContent =
+          "Deine Reaktionszeit: " + zeit + " ms";
+
+        reaktionNachricht.textContent =
+          zeit < 250 ? "Wow, blitzschnell! ⚡" : "Nicht schlecht!";
+      }
+    });
+
+    /* =========================================================
+       3. ZAHLEN RATEN
+    ========================================================= */
+    const zahlenEingabe = document.getElementById("zahlen-eingabe");
+    const zahlenRaten = document.getElementById("zahlen-raten");
+    const zahlenNeu = document.getElementById("zahlen-neu");
+    const zahlenNachricht = document.getElementById("zahlen-nachricht");
+    const zahlenVersucheAnzeige = document.getElementById("zahlen-versuche");
+
+    let geheimeZahl;
+    let zahlenVersuche;
+
+    function neueGeheimeZahl() {
+      geheimeZahl = Math.floor(Math.random() * 100) + 1;
+      zahlenVersuche = 0;
+
+      zahlenEingabe.value = "";
+      zahlenVersucheAnzeige.textContent = "0";
+      zahlenNachricht.textContent =
+        "Ich denke an eine Zahl zwischen 1 und 100.";
+    }
+
+    function zahlPruefen() {
+      const tipp = Number(zahlenEingabe.value);
+
+      if (!tipp || tipp < 1 || tipp > 100) {
+        zahlenNachricht.textContent =
+          "Bitte gib eine Zahl von 1 bis 100 ein.";
+        return;
+      }
+
+      zahlenVersuche++;
+      zahlenVersucheAnzeige.textContent = zahlenVersuche;
+
+      if (tipp < geheimeZahl) {
+        zahlenNachricht.textContent = "Zu niedrig! ⬆️";
+      } else if (tipp > geheimeZahl) {
+        zahlenNachricht.textContent = "Zu hoch! ⬇️";
+      } else {
+        zahlenNachricht.textContent =
+          "Richtig! 🥳 Die Zahl war " +
+          geheimeZahl +
+          ". Versuche: " +
+          zahlenVersuche;
+      }
+
+      zahlenEingabe.select();
+    }
+
+    zahlenRaten.addEventListener("click", zahlPruefen);
+    zahlenNeu.addEventListener("click", neueGeheimeZahl);
+
+    zahlenEingabe.addEventListener("keydown", event => {
+      if (event.key === "Enter") zahlPruefen();
+    });
+
+    neueGeheimeZahl();
+
+    /* =========================================================
+       4. SCHERE, STEIN, PAPIER
+    ========================================================= */
+    const rpsNachricht = document.getElementById("rps-nachricht");
+    const rpsDuAnzeige = document.getElementById("rps-du");
+    const rpsComputerAnzeige = document.getElementById("rps-computer");
+    const rpsUnentschiedenAnzeige = document.getElementById("rps-unentschieden");
+
+    let rpsDu = 0;
+    let rpsComputer = 0;
+    let rpsUnentschieden = 0;
+
+    const symbole = {
+      Schere: "✂️",
+      Stein: "✊",
+      Papier: "✋"
+    };
+
+    document.querySelectorAll(".rps-choice").forEach(button => {
+      button.addEventListener("click", () => {
+        const deineWahl = button.dataset.choice;
+        const optionen = ["Schere", "Stein", "Papier"];
+
+        const computerWahl =
+          optionen[Math.floor(Math.random() * optionen.length)];
+
+        let ergebnis;
+
+        if (deineWahl === computerWahl) {
+          rpsUnentschieden++;
+          ergebnis = "Unentschieden!";
+        } else if (
+          (deineWahl === "Schere" && computerWahl === "Papier") ||
+          (deineWahl === "Stein" && computerWahl === "Schere") ||
+          (deineWahl === "Papier" && computerWahl === "Stein")
+        ) {
+          rpsDu++;
+          ergebnis = "Du gewinnst! 🎉";
+        } else {
+          rpsComputer++;
+          ergebnis = "Der Computer gewinnt!";
+        }
+
+        rpsDuAnzeige.textContent = rpsDu;
+        rpsComputerAnzeige.textContent = rpsComputer;
+        rpsUnentschiedenAnzeige.textContent = rpsUnentschieden;
+
+        rpsNachricht.textContent =
+          "Du: " +
+          symbole[deineWahl] +
+          " | Computer: " +
+          symbole[computerWahl] +
+          " — " +
+          ergebnis;
+      });
+    });
+
+    /* =========================================================
+       5. ZUFÄLLIGES LABYRINTH
+    ========================================================= */
+    const maze = document.getElementById("maze");
+    const mazeNachricht = document.getElementById("maze-nachricht");
+    const mazeReset = document.getElementById("maze-reset");
+
+    const mazeGroesse = 21;
+    let mazeGestartet = false;
+    let mazeFertig = false;
+
+    function mischeListe(liste) {
+      const kopie = [...liste];
+
+      for (let i = kopie.length - 1; i > 0; i--) {
+        const zufall = Math.floor(Math.random() * (i + 1));
+
+        [kopie[i], kopie[zufall]] =
+          [kopie[zufall], kopie[i]];
+      }
+
+      return kopie;
+    }
+
+    function labyrinthGenerieren() {
+      const layout = Array.from(
+        { length: mazeGroesse },
+        () => Array(mazeGroesse).fill("1")
+      );
+
+      const startRow = mazeGroesse - 2;
+      const startCol = 1;
+
+      const zielRow = 1;
+      const zielCol = mazeGroesse - 2;
+
+      const stapel = [[startRow, startCol]];
+      layout[startRow][startCol] = "0";
+
+      const richtungen = [
+        [-2, 0],
+        [2, 0],
+        [0, -2],
+        [0, 2]
+      ];
+
+      while (stapel.length > 0) {
+        const [reihe, spalte] =
+          stapel[stapel.length - 1];
+
+        const nachbarn = mischeListe(richtungen).filter(
+          ([reiheNeu, spalteNeu]) => {
+            const neueReihe = reihe + reiheNeu;
+            const neueSpalte = spalte + spalteNeu;
+
+            return (
+              neueReihe > 0 &&
+              neueReihe < mazeGroesse - 1 &&
+              neueSpalte > 0 &&
+              neueSpalte < mazeGroesse - 1 &&
+              layout[neueReihe][neueSpalte] === "1"
+            );
+          }
+        );
+
+        if (nachbarn.length === 0) {
+          stapel.pop();
+          continue;
+        }
+
+        const [reiheNeu, spalteNeu] = nachbarn[0];
+
+        const neueReihe = reihe + reiheNeu;
+        const neueSpalte = spalte + spalteNeu;
+
+        layout[reihe + reiheNeu / 2][spalte + spalteNeu / 2] = "0";
+        layout[neueReihe][neueSpalte] = "0";
+
+        stapel.push([neueReihe, neueSpalte]);
+      }
+
+      layout[startRow][startCol] = "S";
+      layout[zielRow][zielCol] = "G";
+
+      return layout;
+    }
+
+    function mazeErstellen() {
+      const layout = labyrinthGenerieren();
+
+      maze.innerHTML = "";
+      mazeGestartet = false;
+      mazeFertig = false;
+
+      maze.style.gridTemplateColumns =
+        `repeat(${mazeGroesse}, 1fr)`;
+
+      maze.style.gridTemplateRows =
+        `repeat(${mazeGroesse}, 1fr)`;
+
+      mazeNachricht.textContent =
+        "Starte im grünen Feld unten links.";
+
+      layout.forEach(reihe => {
+        reihe.forEach(wert => {
+          const cell = document.createElement("div");
+          cell.className = "maze-cell";
+
+          if (wert === "1") {
+            cell.classList.add("maze-wall");
+
+            cell.addEventListener("mouseenter", () => {
+              if (mazeGestartet && !mazeFertig) {
+                mazeGestartet = false;
+
+                mazeNachricht.textContent =
+                  "Autsch, Wand berührt! Zurück zum grünen Startfeld. 😅";
+              }
+            });
+          }
+
+          if (wert === "S") {
+            cell.classList.add("maze-start");
+
+            cell.addEventListener("mouseenter", () => {
+              if (!mazeFertig) {
+                mazeGestartet = true;
+
+                mazeNachricht.textContent =
+                  "Los geht's – finde den Weg zum gelben Feld!";
+              }
+            });
+          }
+
+          if (wert === "G") {
+            cell.classList.add("maze-goal");
+
+            cell.addEventListener("mouseenter", () => {
+              if (mazeGestartet && !mazeFertig) {
+                mazeFertig = true;
+
+                mazeNachricht.textContent =
+                  "Geschafft! Du hast den Käse erreicht! 🧀🎉";
+              }
+            });
+          }
+
+          maze.appendChild(cell);
+        });
+      });
+    }
+
+    mazeReset.addEventListener("click", mazeErstellen);
+    mazeErstellen();
+
+    /* =========================================================
+       6. FANG DEN MAULWURF
+    ========================================================= */
+    const maulwurfStart = document.getElementById("maulwurf-start");
+    const maulwurfButtons = document.querySelectorAll(".maulwurf");
+    const maulwurfPunkteAnzeige = document.getElementById("maulwurf-punkte");
+    const maulwurfZeitAnzeige = document.getElementById("maulwurf-zeit");
+    const maulwurfNachricht = document.getElementById("maulwurf-nachricht");
+
+    let maulwurfScore = 0;
+    let maulwurfZeit = 20;
+    let maulwurfLaeuft = false;
+    let maulwurfTimer;
+    let maulwurfWechselTimer;
+    let aktiverMaulwurf;
+
+    function maulwurfZeigen() {
+      maulwurfButtons.forEach(button => {
+        button.classList.remove("aktiv");
+      });
+
+      aktiverMaulwurf =
+        maulwurfButtons[
+          Math.floor(Math.random() * maulwurfButtons.length)
+        ];
+
+      aktiverMaulwurf.classList.add("aktiv");
+    }
+
+    maulwurfStart.addEventListener("click", () => {
+      clearInterval(maulwurfTimer);
+      clearInterval(maulwurfWechselTimer);
+
+      maulwurfScore = 0;
+      maulwurfZeit = 20;
+      maulwurfLaeuft = true;
+
+      maulwurfPunkteAnzeige.textContent = maulwurfScore;
+      maulwurfZeitAnzeige.textContent = maulwurfZeit;
+      maulwurfNachricht.textContent = "";
+
+      maulwurfStart.disabled = true;
+      maulwurfStart.textContent = "Spiel läuft ...";
+
+      maulwurfZeigen();
+
+      maulwurfWechselTimer = setInterval(maulwurfZeigen, 650);
+
+      maulwurfTimer = setInterval(() => {
+        maulwurfZeit--;
+        maulwurfZeitAnzeige.textContent = maulwurfZeit;
+
+        if (maulwurfZeit <= 0) {
+          clearInterval(maulwurfTimer);
+          clearInterval(maulwurfWechselTimer);
+
+          maulwurfLaeuft = false;
+
+          maulwurfButtons.forEach(button => {
+            button.classList.remove("aktiv");
+          });
+
+          maulwurfStart.disabled = false;
+          maulwurfStart.textContent = "Noch einmal spielen";
+
+          maulwurfNachricht.textContent =
+            "Zeit vorbei! Du hast " +
+            maulwurfScore +
+            " Maulwürfe gefangen. 🔨";
+        }
+      }, 1000);
+    });
+
+    maulwurfButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        if (maulwurfLaeuft && button === aktiverMaulwurf) {
+          maulwurfScore++;
+          maulwurfPunkteAnzeige.textContent = maulwurfScore;
+
+          button.classList.remove("aktiv");
+
+          setTimeout(maulwurfZeigen, 120);
+        }
+      });
+    });
+
+    /* =========================================================
+       7. DOODLE JUMP
+    ========================================================= */
+    const doodleCanvas = document.getElementById("doodle-canvas");
+    const doodleCtx = doodleCanvas.getContext("2d");
+
+    const doodleStart = document.getElementById("doodle-start");
+    const doodlePunkteAnzeige = document.getElementById("doodle-punkte");
+    const doodleNachricht = document.getElementById("doodle-nachricht");
+    const doodleLinks = document.getElementById("doodle-links");
+    const doodleRechts = document.getElementById("doodle-rechts");
+
+    let doodleLaeuft = false;
+    let doodleAnimation;
+    let doodleLetzteZeit = 0;
+    let doodleSpieler;
+    let doodlePlattformen;
+    let doodleScore = 0;
+    let doodleBewegung = 0;
+
+    function doodleInitialisieren() {
+      doodleSpieler = {
+        x: 190,
+        y: 430,
+        breite: 30,
+        hoehe: 30,
+        vy: -620
+      };
+
+      doodlePlattformen = [
+        { x: 150, y: 490, breite: 120, portal: false },
+        { x: 70, y: 420, breite: 115, portal: false },
+        { x: 175, y: 350, breite: 115, portal: false },
+        { x: 260, y: 280, breite: 115, portal: false },
+        { x: 160, y: 210, breite: 115, portal: false },
+        { x: 65, y: 140, breite: 115, portal: false },
+        { x: 165, y: 70, breite: 115, portal: false }
+      ];
+
+      doodleScore = 0;
+      doodlePunkteAnzeige.textContent = doodleScore;
+    }
+
+    function doodleZeichnen() {
+      doodleCtx.clearRect(0, 0, doodleCanvas.width, doodleCanvas.height);
+
+      const himmel = doodleCtx.createLinearGradient(
+        0,
+        0,
+        0,
+        doodleCanvas.height
+      );
+
+      himmel.addColorStop(0, "#c9e8f7");
+      himmel.addColorStop(1, "#eff9fc");
+
+      doodleCtx.fillStyle = himmel;
+      doodleCtx.fillRect(0, 0, doodleCanvas.width, doodleCanvas.height);
+
+      doodleCtx.fillStyle = "rgba(255,255,255,.8)";
+      doodleCtx.beginPath();
+      doodleCtx.arc(70, 70, 25, 0, Math.PI * 2);
+      doodleCtx.arc(100, 65, 30, 0, Math.PI * 2);
+      doodleCtx.arc(130, 75, 22, 0, Math.PI * 2);
+      doodleCtx.fill();
+
+      doodlePlattformen.forEach(plattform => {
+        if (plattform.portal) {
+          doodleCtx.fillStyle = "#f08039";
+          doodleCtx.fillRect(
+            plattform.x,
+            plattform.y,
+            plattform.breite,
+            13
+          );
+
+          doodleCtx.fillStyle = "#c75216";
+          doodleCtx.fillRect(
+            plattform.x,
+            plattform.y + 10,
+            plattform.breite,
+            4
+          );
+
+          doodleCtx.fillStyle = "white";
+          doodleCtx.font = "bold 12px Arial";
+          doodleCtx.textAlign = "center";
+          doodleCtx.fillText(
+            "↔",
+            plattform.x + plattform.breite / 2,
+            plattform.y + 11
+          );
+        } else {
+          doodleCtx.fillStyle = "#29986c";
+          doodleCtx.fillRect(
+            plattform.x,
+            plattform.y,
+            plattform.breite,
+            13
+          );
+
+          doodleCtx.fillStyle = "#1b7553";
+          doodleCtx.fillRect(
+            plattform.x,
+            plattform.y + 10,
+            plattform.breite,
+            4
+          );
+        }
+      });
+
+      doodleCtx.fillStyle = "#8a4fa4";
+      doodleCtx.beginPath();
+      doodleCtx.arc(
+        doodleSpieler.x + doodleSpieler.breite / 2,
+        doodleSpieler.y + doodleSpieler.hoehe / 2,
+        doodleSpieler.breite / 2,
+        0,
+        Math.PI * 2
+      );
+      doodleCtx.fill();
+
+      doodleCtx.fillStyle = "white";
+      doodleCtx.beginPath();
+      doodleCtx.arc(
+        doodleSpieler.x + 10,
+        doodleSpieler.y + 12,
+        3,
+        0,
+        Math.PI * 2
+      );
+      doodleCtx.arc(
+        doodleSpieler.x + 20,
+        doodleSpieler.y + 12,
+        3,
+        0,
+        Math.PI * 2
+      );
+      doodleCtx.fill();
+
+      doodleCtx.fillStyle = "#32253b";
+      doodleCtx.beginPath();
+      doodleCtx.arc(
+        doodleSpieler.x + 10,
+        doodleSpieler.y + 12,
+        1.2,
+        0,
+        Math.PI * 2
+      );
+      doodleCtx.arc(
+        doodleSpieler.x + 20,
+        doodleSpieler.y + 12,
+        1.2,
+        0,
+        Math.PI * 2
+      );
+      doodleCtx.fill();
+    }
+
+    function doodleNeuePlattform() {
+      const oberste = doodlePlattformen.reduce(
+        (ergebnis, plattform) => {
+          return plattform.y < ergebnis.y ? plattform : ergebnis;
+        }
+      );
+
+      const level = Math.min(5, Math.floor(doodleScore / 75));
+
+      const breite =
+        Math.random() * ((125 - level * 5) - (105 - level * 9)) +
+        (105 - level * 9);
+
+      const hoehenAbstand =
+        Math.random() * ((75 + level * 5) - (55 + level * 4)) +
+        (55 + level * 4);
+
+      const neueY = oberste.y - hoehenAbstand;
+
+      let neueX;
+      let portal = false;
+
+      const darfPortalSein =
+        level >= 2 &&
+        (
+          oberste.x < 95 ||
+          oberste.x + oberste.breite > doodleCanvas.width - 95
+        );
+
+      if (darfPortalSein && Math.random() < 0.10 + level * 0.06) {
+        portal = true;
+
+        if (oberste.x < 95) {
+          neueX =
+            doodleCanvas.width -
+            breite -
+            (Math.random() * 40 + 10);
+        } else {
+          neueX = Math.random() * 40 + 10;
+        }
+      } else {
+        const horizontalerAbstand = 100 + level * 10;
+
+        neueX =
+          oberste.x +
+          (
+            Math.random() * horizontalerAbstand * 2 -
+            horizontalerAbstand
+          );
+
+        neueX = Math.max(
+          10,
+          Math.min(doodleCanvas.width - breite - 10, neueX)
+        );
+      }
+
+      doodlePlattformen.push({
+        x: neueX,
+        y: neueY,
+        breite: breite,
+        portal: portal
+      });
+    }
+
+    function doodleUpdate(zeitstempel) {
+      if (!doodleLaeuft) return;
+
+      const delta = Math.min(
+        (zeitstempel - doodleLetzteZeit) / 1000,
+        0.03
+      );
+
+      doodleLetzteZeit = zeitstempel;
+
+      doodleSpieler.vy += 1450 * delta;
+      doodleSpieler.vy = Math.min(doodleSpieler.vy, 750);
+
+      doodleSpieler.x += doodleBewegung * 250 * delta;
+      doodleSpieler.y += doodleSpieler.vy * delta;
+
+      if (doodleSpieler.x > doodleCanvas.width) {
+        doodleSpieler.x = -doodleSpieler.breite;
+      }
+
+      if (doodleSpieler.x + doodleSpieler.breite < 0) {
+        doodleSpieler.x = doodleCanvas.width;
+      }
+
+      if (doodleSpieler.vy > 0) {
+        doodlePlattformen.forEach(plattform => {
+          const spielerUnten =
+            doodleSpieler.y + doodleSpieler.hoehe;
+
+          const vorherSpielerUnten =
+            spielerUnten - doodleSpieler.vy * delta;
+
+          const trifft =
+            doodleSpieler.x + doodleSpieler.breite > plattform.x &&
+            doodleSpieler.x < plattform.x + plattform.breite &&
+            spielerUnten >= plattform.y &&
+            vorherSpielerUnten <= plattform.y + 13;
+
+          if (trifft) {
+            doodleSpieler.y = plattform.y - doodleSpieler.hoehe;
+            doodleSpieler.vy = -620;
+          }
+        });
+      }
+
+      const kameraHoehe = 165;
+
+      if (doodleSpieler.y < kameraHoehe && doodleSpieler.vy < 0) {
+        const verschiebung = kameraHoehe - doodleSpieler.y;
+
+        doodleSpieler.y = kameraHoehe;
+
+        doodlePlattformen.forEach(plattform => {
+          plattform.y += verschiebung;
+        });
+
+        doodleScore += Math.max(
+          1,
+          Math.round(verschiebung / 10)
+        );
+
+        doodlePunkteAnzeige.textContent = doodleScore;
+
+        const level = Math.min(
+          5,
+          Math.floor(doodleScore / 75) + 1
+        );
+
+        if (level === 1) {
+          doodleNachricht.textContent =
+            "Level 1 – entspannt starten!";
+        } else if (level === 2) {
+          doodleNachricht.textContent =
+            "Level 2 – Plattformen werden kleiner!";
+        } else if (level === 3) {
+          doodleNachricht.textContent =
+            "Level 3 – orange Plattformen: Seitenwechsel! ↔";
+        } else if (level === 4) {
+          doodleNachricht.textContent =
+            "Level 4 – jetzt wird's sportlich!";
+        } else {
+          doodleNachricht.textContent =
+            "Level 5 – nicht aufgeben! 🔥";
+        }
+      }
+
+      doodlePlattformen = doodlePlattformen.filter(plattform => {
+        return plattform.y < doodleCanvas.height + 25;
+      });
+
+      while (doodlePlattformen.length < 7) {
+        doodleNeuePlattform();
+      }
+
+      if (doodleSpieler.y > doodleCanvas.height) {
+        doodleLaeuft = false;
+        doodleBewegung = 0;
+
+        doodleStart.disabled = false;
+        doodleStart.textContent = "Noch einmal spielen";
+
+        doodleNachricht.textContent =
+          "Game Over – Höhe: " + doodleScore + " 🟢";
+
+        doodleZeichnen();
+        return;
+      }
+
+      doodleZeichnen();
+      doodleAnimation = requestAnimationFrame(doodleUpdate);
+    }
+
+    doodleStart.addEventListener("click", () => {
+      cancelAnimationFrame(doodleAnimation);
+
+      doodleInitialisieren();
+
+      doodleLaeuft = true;
+      doodleBewegung = 0;
+      doodleLetzteZeit = performance.now();
+
+      doodleStart.disabled = true;
+      doodleStart.textContent = "Spiel läuft ...";
+
+      doodleNachricht.textContent =
+        "Nutze ← und →, um auf Plattformen zu landen!";
+
+      doodleAnimation = requestAnimationFrame(doodleUpdate);
+    });
+
+    function doodleNachLinks() {
+      if (doodleLaeuft) doodleBewegung = -1;
+    }
+
+    function doodleNachRechts() {
+      if (doodleLaeuft) doodleBewegung = 1;
+    }
+
+    doodleLinks.addEventListener("mousedown", doodleNachLinks);
+    doodleRechts.addEventListener("mousedown", doodleNachRechts);
+
+    doodleLinks.addEventListener("touchstart", event => {
+      event.preventDefault();
+      doodleNachLinks();
+    });
+
+    doodleRechts.addEventListener("touchstart", event => {
+      event.preventDefault();
+      doodleNachRechts();
+    });
+
+    ["mouseup", "mouseleave", "touchend"].forEach(eventName => {
+      doodleLinks.addEventListener(eventName, () => {
+        doodleBewegung = 0;
+      });
+
+      doodleRechts.addEventListener(eventName, () => {
+        doodleBewegung = 0;
+      });
+    });
+
+    document.addEventListener("keydown", event => {
+      if (!doodleLaeuft) return;
+
+      if (event.key === "ArrowLeft") {
+        doodleBewegung = -1;
+        event.preventDefault();
+      }
+
+      if (event.key === "ArrowRight") {
+        doodleBewegung = 1;
+        event.preventDefault();
+      }
+    });
+
+    document.addEventListener("keyup", event => {
+      if (
+        event.key === "ArrowLeft" ||
+        event.key === "ArrowRight"
+      ) {
+        doodleBewegung = 0;
+      }
+    });
+
+    doodleInitialisieren();
+    doodleZeichnen();
+
+    /* =========================================================
+       8. EMOJI-FÄNGER
+    ========================================================= */
+    const emojiStart = document.getElementById("emoji-start");
+    const emojiFeld = document.getElementById("emoji-spielfeld");
+    const korb = document.getElementById("korb");
+
+    const emojiPunkteAnzeige = document.getElementById("emoji-punkte");
+    const emojiZeitAnzeige = document.getElementById("emoji-zeit");
+    const emojiNachricht = document.getElementById("emoji-nachricht");
+
+    const emojiLinks = document.getElementById("emoji-links");
+    const emojiRechts = document.getElementById("emoji-rechts");
+
+    let emojiLaeuft = false;
+    let emojiScore = 0;
+    let emojiZeit = 25;
+    let emojiTimer;
+    let emojiSpawnTimer;
+    let emojiAnimation;
+    let fallendeEmojis = [];
+    let korbX = 0;
+
+    const emojiListe = [
+      "🍎", "🍕", "⭐", "💜", "🍩",
+      "🌈", "🎈", "🍀", "🧁"
+    ];
+
+    function korbBewegen(neueX) {
+      const maxX = emojiFeld.clientWidth - korb.offsetWidth;
+
+      korbX = Math.max(0, Math.min(neueX, maxX));
+      korb.style.left = korbX + "px";
+    }
+
+    function emojiErzeugen() {
+      const element = document.createElement("div");
+      element.className = "fallendes-emoji";
+
+      element.textContent =
+        emojiListe[Math.floor(Math.random() * emojiListe.length)];
+
+      const emoji = {
+        element: element,
+        x: Math.random() * (emojiFeld.clientWidth - 40),
+        y: -40,
+        geschwindigkeit: Math.random() * 2 + 2.4
+      };
+
+      element.style.left = emoji.x + "px";
+      element.style.top = emoji.y + "px";
+
+      emojiFeld.appendChild(element);
+      fallendeEmojis.push(emoji);
+    }
+
+    function emojiUpdate() {
+      if (!emojiLaeuft) return;
+
+      const korbRechteck = korb.getBoundingClientRect();
+
+      fallendeEmojis = fallendeEmojis.filter(emoji => {
+        emoji.y += emoji.geschwindigkeit;
+        emoji.element.style.top = emoji.y + "px";
+
+        const emojiRechteck = emoji.element.getBoundingClientRect();
+
+        const gefangen =
+          emojiRechteck.bottom >= korbRechteck.top &&
+          emojiRechteck.top <= korbRechteck.bottom &&
+          emojiRechteck.right >= korbRechteck.left &&
+          emojiRechteck.left <= korbRechteck.right;
+
+        if (gefangen) {
+          emojiScore++;
+          emojiPunkteAnzeige.textContent = emojiScore;
+
+          emoji.element.remove();
+          return false;
+        }
+
+        if (emoji.y > emojiFeld.clientHeight) {
+          emoji.element.remove();
+          return false;
+        }
+
+        return true;
+      });
+
+      emojiAnimation = requestAnimationFrame(emojiUpdate);
+    }
+
+    emojiStart.addEventListener("click", () => {
+      clearInterval(emojiTimer);
+      clearInterval(emojiSpawnTimer);
+      cancelAnimationFrame(emojiAnimation);
+
+      fallendeEmojis.forEach(emoji => emoji.element.remove());
+      fallendeEmojis = [];
+
+      emojiScore = 0;
+      emojiZeit = 25;
+      emojiLaeuft = true;
+
+      emojiPunkteAnzeige.textContent = emojiScore;
+      emojiZeitAnzeige.textContent = emojiZeit;
+
+      emojiStart.disabled = true;
+      emojiStart.textContent = "Spiel läuft ...";
+
+      emojiNachricht.textContent = "";
+
+      korbBewegen(
+        (emojiFeld.clientWidth - korb.offsetWidth) / 2
+      );
+
+      emojiSpawnTimer = setInterval(emojiErzeugen, 550);
+      emojiUpdate();
+
+      emojiTimer = setInterval(() => {
+        emojiZeit--;
+        emojiZeitAnzeige.textContent = emojiZeit;
+
+        if (emojiZeit <= 0) {
+          clearInterval(emojiTimer);
+          clearInterval(emojiSpawnTimer);
+
+          emojiLaeuft = false;
+
+          emojiStart.disabled = false;
+          emojiStart.textContent = "Noch einmal spielen";
+
+          emojiNachricht.textContent =
+            "Zeit vorbei! Du hast " +
+            emojiScore +
+            " Emojis gefangen. 🥳";
+        }
+      }, 1000);
+    });
+
+    function korbMitMausBewegen(event) {
+      if (!emojiLaeuft) return;
+
+      const rechteck = emojiFeld.getBoundingClientRect();
+
+      korbBewegen(
+        event.clientX -
+        rechteck.left -
+        korb.offsetWidth / 2
+      );
+    }
+
+    emojiFeld.addEventListener("mousemove", korbMitMausBewegen);
+
+    emojiFeld.addEventListener("pointermove", event => {
+      if (event.pointerType === "touch") {
+        korbMitMausBewegen(event);
+      }
+    });
+
+    emojiLinks.addEventListener("click", () => {
+      if (emojiLaeuft) korbBewegen(korbX - 45);
+    });
+
+    emojiRechts.addEventListener("click", () => {
+      if (emojiLaeuft) korbBewegen(korbX + 45);
+    });
+
+    /* =========================================================
+       9. FARBEN-CHAOS
+    ========================================================= */
+    const farbenStart = document.getElementById("farben-start");
+    const farbenWort = document.getElementById("farben-wort");
+    const farbenPunkteAnzeige = document.getElementById("farben-punkte");
+    const farbenRundeAnzeige = document.getElementById("farben-runde");
+    const farbenNachricht = document.getElementById("farben-nachricht");
+    const farbenButtons = document.querySelectorAll(".color-choice");
+
+    const farben = [
+      { name: "Rot", value: "#e64b5d" },
+      { name: "Blau", value: "#3570c9" },
+      { name: "Grün", value: "#29986c" },
+      { name: "Gelb", value: "#d59c20" }
+    ];
+
+    let farbenLaeuft = false;
+    let farbenPunkte = 0;
+    let farbenRunde = 0;
+    let richtigeFarbe = "";
+
+    function naechsteFarbenRunde() {
+      const wort =
+        farben[Math.floor(Math.random() * farben.length)];
+
+      let schrift =
+        farben[Math.floor(Math.random() * farben.length)];
+
+      while (schrift.name === wort.name) {
+        schrift =
+          farben[Math.floor(Math.random() * farben.length)];
+      }
+
+      richtigeFarbe = schrift.name;
+
+      farbenWort.textContent = wort.name.toUpperCase();
+      farbenWort.style.color = schrift.value;
+
+      farbenNachricht.textContent =
+        "Welche Schriftfarbe siehst du?";
+    }
+
+    farbenStart.addEventListener("click", () => {
+      farbenLaeuft = true;
+      farbenPunkte = 0;
+      farbenRunde = 0;
+
+      farbenPunkteAnzeige.textContent = farbenPunkte;
+      farbenRundeAnzeige.textContent = farbenRunde;
+
+      farbenStart.disabled = true;
+      farbenStart.textContent = "Spiel läuft ...";
+
+      naechsteFarbenRunde();
+    });
+
+    farbenButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        if (!farbenLaeuft) return;
+
+        farbenRunde++;
+
+        if (button.dataset.color === richtigeFarbe) {
+          farbenPunkte++;
+          farbenNachricht.textContent = "Richtig! ✅";
+        } else {
+          farbenNachricht.textContent =
+            "Fast – richtig wäre " +
+            richtigeFarbe +
+            " gewesen.";
+        }
+
+        farbenPunkteAnzeige.textContent = farbenPunkte;
+        farbenRundeAnzeige.textContent = farbenRunde;
+
+        if (farbenRunde >= 10) {
+          farbenLaeuft = false;
+
+          farbenStart.disabled = false;
+          farbenStart.textContent = "Noch einmal spielen";
+
+          farbenWort.textContent = "FERTIG!";
+          farbenWort.style.color = "#86365f";
+
+          farbenNachricht.textContent =
+            "Du hast " + farbenPunkte + " von 10 Punkten geschafft. 🌈";
+        } else {
+          setTimeout(naechsteFarbenRunde, 550);
+        }
+      });
+    });
+
+    /* =========================================================
+       10. MITARBEITER-BINGO
+    ========================================================= */
+    const bingoGrid = document.getElementById("bingo-grid");
+    const bingoNeu = document.getElementById("bingo-neu");
+    const bingoNachricht = document.getElementById("bingo-nachricht");
+
+    const bingoAussagen = [
+      "Hat heute schon Kaffee getrunken",
+      "Hat mindestens 10 Tabs offen",
+      "Sagt: „Kannst du mich hören?“",
+      "Schreibt: „Kurze Frage ...“",
+      "Hat ein Emoji benutzt",
+      "Sucht nach einem Passwort",
+      "Sagt: „Sorry, war noch stumm“",
+      "Hat einen Snack am Arbeitsplatz",
+      "Hat über das Wetter gesprochen",
+      "Hat eine To-do-Liste offen",
+      "Hat Musik beim Arbeiten an",
+      "Schaut kurz aufs Handy",
+      "Sagt: „Ich bin gleich fertig“",
+      "Hat etwas gegoogelt",
+      "Trinkt Wasser oder Tee",
+      "Hat ein Paket erwartet",
+      "Hat einen Drucker verflucht",
+      "Macht gerade Multitasking",
+      "Hat ungelesene Mails",
+      "Sagt: „Das sollte funktionieren“",
+      "Hat heute gelacht",
+      "Plant die Mittagspause",
+      "Hat einen Post-it am Bildschirm",
+      "War zu früh oder spät im Meeting",
+      "Benutzt einen zweiten Bildschirm",
+      "Hat eine Excel-Datei offen",
+      "Sagt: „Ich schicke dir das gleich“",
+      "Hat nach WLAN gesucht",
+      "Braucht dringend Urlaub",
+      "Hat heute „Danke!“ geschrieben"
+    ];
+
+    function bingoMischen(liste) {
+      const gemischt = [...liste];
+
+      for (let i = gemischt.length - 1; i > 0; i--) {
+        const zufall = Math.floor(Math.random() * (i + 1));
+
+        [gemischt[i], gemischt[zufall]] =
+          [gemischt[zufall], gemischt[i]];
+      }
+
+      return gemischt;
+    }
+
+    function bingoPruefen() {
+      const zellen = [...document.querySelectorAll(".bingo-cell")];
+
+      const gewinnReihen = [
+        [0, 1, 2, 3, 4],
+        [5, 6, 7, 8, 9],
+        [10, 11, 12, 13, 14],
+        [15, 16, 17, 18, 19],
+        [20, 21, 22, 23, 24],
+
+        [0, 5, 10, 15, 20],
+        [1, 6, 11, 16, 21],
+        [2, 7, 12, 17, 22],
+        [3, 8, 13, 18, 23],
+        [4, 9, 14, 19, 24],
+
+        [0, 6, 12, 18, 24],
+        [4, 8, 12, 16, 20]
+      ];
+
+      const bingo = gewinnReihen.some(reihe => {
+        return reihe.every(index => {
+          return zellen[index].classList.contains("selected");
+        });
+      });
+
+      bingoNachricht.textContent = bingo
+        ? "BINGO! 🎉 Du hast fünf Felder in einer Reihe!"
+        : "Weiter so – finde fünf Felder in einer Reihe.";
+    }
+
+    function bingoErstellen() {
+      bingoGrid.innerHTML = "";
+
+      const aussagen =
+        bingoMischen(bingoAussagen).slice(0, 24);
+
+      // Mittleres Feld eines 5 × 5 Felds
+      aussagen.splice(12, 0, "FREIES FELD");
+
+      aussagen.forEach((aussage, index) => {
+        const zelle = document.createElement("div");
+        zelle.className = "bingo-cell";
+        zelle.textContent = aussage;
+
+        if (index === 12) {
+          zelle.classList.add("selected", "free");
+        }
+
+        zelle.addEventListener("click", () => {
+          if (index === 12) return;
+
+          zelle.classList.toggle("selected");
+          bingoPruefen();
+        });
+
+        bingoGrid.appendChild(zelle);
+      });
+
+      bingoNachricht.textContent =
+        "Neue Bingo-Karte erstellt – viel Erfolg!";
+    }
+
+    bingoNeu.addEventListener("click", bingoErstellen);
+    bingoErstellen();
+  </script>
+</body>
+</html>
